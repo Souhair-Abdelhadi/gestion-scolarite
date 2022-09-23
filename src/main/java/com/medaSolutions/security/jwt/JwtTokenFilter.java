@@ -52,7 +52,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	}
 	
 	
-	private void setAuthenticationToken(String accessToken, HttpServletRequest request) {
+	public void setAuthenticationToken(String accessToken, HttpServletRequest request) {
 		UserDetails compteDetails = getUserDetails(accessToken);
 		System.out.println("role : "+compteDetails.getAuthorities());
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(compteDetails,null,compteDetails.getAuthorities());
@@ -60,7 +60,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
-	private UserDetails getUserDetails(String accessToken) {
+	public UserDetails getUserDetails(String accessToken) {
 		Compte compteDetails = new Compte();
 		Claims claims = jwtTokenUtil.parseClaims(accessToken);
 		String subject = (String) claims.get(Claims.SUBJECT);
@@ -74,13 +74,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	    }
 		
 		//String[] subjectArray = jwtTokenUtil.getSubject(accessToken).split(",");
+	    System.out.println("sub : "+subject);
 	    String[] jwtSybject = subject.split(",");
 		compteDetails.setId(Integer.parseInt(jwtSybject[0]));
 		compteDetails.setCin(jwtSybject[1]);
 		return compteDetails;
 	}
 
-	private boolean hasAuthorizationHeader(HttpServletRequest request) {
+	public boolean hasAuthorizationHeader(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
 		if(ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
 			return false;
@@ -88,9 +89,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 		return true;
 	}
 
-	private String getAccessToken(HttpServletRequest request) {
+	public String getAccessToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
 		String token = header.split(" ")[1];
 		return token.trim();
 	}
+	
 }

@@ -60,6 +60,10 @@ public class Etudiant  {
 	
 	@OneToMany(mappedBy = "etudiant")
 	@JsonManagedReference
+	private Set<Notes> notes;
+	
+	@OneToMany(mappedBy = "etudiant")
+	@JsonManagedReference
 	private Set<Absence> absences = new HashSet<Absence>();
 	
 	
@@ -88,6 +92,8 @@ public class Etudiant  {
 		this.prenom = prenom;
 		this.cin = cin;
 	}
+	
+	
 
 
 
@@ -158,6 +164,21 @@ public class Etudiant  {
 	public void setAbsences(Set<Absence> absences) {
 		this.absences = absences;
 	}
+
+
+
+	public Set<Notes> getNotes() {
+		return notes;
+	}
+
+
+
+	public void setNotes(Set<Notes> notes) {
+		this.notes = notes;
+	}
+
+
+
 	
 	
 	

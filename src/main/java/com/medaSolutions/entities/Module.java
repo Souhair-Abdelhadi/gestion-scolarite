@@ -53,6 +53,10 @@ public class Module {
 	@JsonIgnore
 	@OneToMany(mappedBy = "module",fetch = FetchType.LAZY)
 	public Set<Absence> absences = new HashSet<Absence>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "module",fetch = FetchType.LAZY)
+	public Set<Notes> notes = new HashSet<Notes>();
 
 	public Module() {
 		super();

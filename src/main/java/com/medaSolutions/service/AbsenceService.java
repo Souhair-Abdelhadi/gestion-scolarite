@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +46,37 @@ public class AbsenceService {
 	
 	@Autowired
 	private AbsenceSequenceRepo absSeqRepo;
+	
+	
+	@RolesAllowed({"ROLE_SECRETAIRE","ROLE_ENSEIGNANT"})
+	@GetMapping(value = "/getAbsences/{cin}")
+	public ResponseEntity<Object> getAbsences( @PathVariable String cin ) {
+		
+		try {
+			Optional<Etudiant> etud =  etudiantRepo.findEtudiantByCin(cin);
+			
+			
+			if(etud.isPresent()) {
+				
+				return ResponseEntity.status(HttpStatus.OK).body(absenceRepo.findEtudiantAbsences(cin));
+			}
+			else {
+				HashMap<String, Object> errors = new HashMap<>();
+				errors.put("error", true);
+				errors.put("message", "Etudiant not found with the given cin");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			HashMap<String, Object> errors = new HashMap<>();
+			errors.put("error", true);
+			errors.put("message", e.getLocalizedMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
+		}
+		
+	}
+	
 	
 	
 	@RolesAllowed("ROLE_SECRETAIRE")

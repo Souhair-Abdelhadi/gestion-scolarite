@@ -1,6 +1,9 @@
 package com.medaSolutions.security.jwt;
 
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
@@ -8,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medaSolutions.entities.Compte;
 
 import io.jsonwebtoken.Claims;
@@ -71,8 +77,34 @@ public class JwtTokenUtil {
 	}
 	
 	public String getSubject(String token) {
+		System.out.println("token :" +token);
 		return parseClaims(token).getSubject();
 	}
+	
+	
+	public int getCompteId(String token) {
+		
+		try {
+			String[] chunks = token.substring(8).split("\\.");
+			Base64.Decoder decoder = Base64.getUrlDecoder();
+			String header = new String(decoder.decode(chunks[0]));
+			String payload = new String(decoder.decode(chunks[1]));
+			HashMap<String, Object> mapping = new ObjectMapper().readValue(payload, HashMap.class);
+			System.out.println("sub value : "+mapping.get("sub"));
+			String sub = (String) mapping.get("sub");
+			String[] subsList = sub.split(",");
+			return Integer.parseInt(subsList[0]);
+//			return subsList[1];
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+			return 0;
+		}
+		
+	}
+		
+	
 	
 	
 }

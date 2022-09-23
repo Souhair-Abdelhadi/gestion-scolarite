@@ -13,6 +13,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "sectetaires",
 	uniqueConstraints = {
@@ -42,6 +44,8 @@ public class Secretaire {
 	@Size(min = 8,max = 16)
 	private String mdp;
 	
+	
+	@JsonIgnore
 	@OneToOne(mappedBy = "secretaire")
 	private Compte compte;
 
