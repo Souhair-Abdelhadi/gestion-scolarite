@@ -46,7 +46,7 @@ public class NoteService {
 	@Autowired
 	private NoteSequenceRepo noteSeqRepo;
 	
-	@RolesAllowed(value = "ROLE_SECRETAIRE")
+	@RolesAllowed(value = {"ROLE_SECRETAIRE","ROLE_PROFESSEUR"})
 	@GetMapping(value = "/notes/{id}")
 	public ResponseEntity<Object> getNote(@PathVariable int id){
 		try {
@@ -69,7 +69,7 @@ public class NoteService {
 	}
 	
 	
-	@RolesAllowed(value = "ROLE_SECRETAIRE")
+	@RolesAllowed(value = "ROLE_PROFESSEUR")
 	@PostMapping(value = "/addNote")
 	public ResponseEntity<Object> addNote(@RequestBody @Valid NotePojo notePojo,BindingResult bindingRes){
 		try {
@@ -117,12 +117,12 @@ public class NoteService {
 	}
 	
 	
-	@RolesAllowed(value = "ROLE_SECRETAIRE")
+	@RolesAllowed(value = {"ROLE_PROFESSEUR"})
 	@PutMapping(value = "/updateNote/{id}")
 	public ResponseEntity<Object> updateNote(@PathVariable int id,@RequestBody @Valid NotePojo notePojo){
 		try {
 			HashMap<String, Object> errors = new HashMap<>();
-			if( id == 0) {
+			if( id <= 0) {
 				errors.put("error", true);
 				errors.put("message","Note id is Required");
 
@@ -155,7 +155,7 @@ public class NoteService {
 		}
 	}
 	
-	@RolesAllowed(value = "ROLE_SECRETAIRE")
+	@RolesAllowed(value = {"ROLE_SECRETAIRE","ROLE_PROFESSEUR"})
 	@PutMapping(value = "/deleteNote/{id}")
 	public ResponseEntity<Object> deleteNote(@PathVariable int id){
 		try {

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.medaSolutions.entities.AffectationPK;
 import com.medaSolutions.entities.Affectations;
-import com.medaSolutions.entities.Enseignant;
+import com.medaSolutions.entities.Professeur;
 import com.medaSolutions.entities.Module;
 import com.medaSolutions.entities.pojo.AffectationPojo;
 import com.medaSolutions.entities.sequence.AffectationSequence;
@@ -47,7 +47,7 @@ public class AffectationService {
 	
 	
 	@RolesAllowed("ROLE_SECRETAIRE")
-	@PostMapping(value = "/affectModuleEnseignant")
+	@PostMapping(value = "/affectModuleProfesseur")
 	public ResponseEntity<Object> addAffectation(@RequestBody @Valid AffectationPojo affectationPojo) {
 					
 		try {
@@ -55,8 +55,8 @@ public class AffectationService {
 			//need to check if already the professor had the module or not, if so don't admit the post 
 			
 			HashMap<String, Object> errors = new HashMap<>();
-			System.out.println("id ens : "+ affectationPojo.getIdEnseignant()+ " id module : "+affectationPojo.getIdModule());
-			Optional<Enseignant> ens =  ensRepo.findById(affectationPojo.getIdEnseignant());
+			System.out.println("id ens : "+ affectationPojo.getIdProfesseur()+ " id module : "+affectationPojo.getIdModule());
+			Optional<Professeur> ens =  ensRepo.findById(affectationPojo.getIdProfesseur());
 			Optional<Module> module = moduleRepo.findById(affectationPojo.getIdModule());	
 			if(ens.isPresent() && module.isPresent()) {
 				AffectationSequence affectSeq = affctSeqRepo.save(new AffectationSequence(Date.valueOf(LocalDate.now())));
@@ -66,7 +66,7 @@ public class AffectationService {
 				
 			}
 			errors.put("error", true);
-			errors.put("message", "Either Enseignant and/or Module id's does not exist");
+			errors.put("message", "Either Professeur and/or Module id's does not exist");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -90,7 +90,7 @@ public class AffectationService {
 			System.out.println("id affectation : "+ affectationPojo.getId());
 			Optional<Affectations> affect = affectationRepo.findAffectationsById(affectationPojo.getId());
 			if(affect.isPresent()) {
-				Affectations updatedAffect = new Affectations(affect.get().getId(), affect.get().getEnseignant(),
+				Affectations updatedAffect = new Affectations(affect.get().getId(), affect.get().getProfesseur(),
 						affect.get().getModule(), affectationPojo.getDate_affectation());
 				return ResponseEntity.status(HttpStatus.OK).body(affectationRepo.save(updatedAffect));
 				

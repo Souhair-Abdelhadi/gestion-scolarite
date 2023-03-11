@@ -63,9 +63,9 @@ public class Compte implements UserDetails {
 	private Secretaire secretaire;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "enseignant_id",referencedColumnName = "id")
+	@JoinColumn(name = "professeur_id",referencedColumnName = "id")
 	@Nullable
-	private Enseignant enseignant;
+	private Professeur professeur;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
@@ -83,19 +83,19 @@ public class Compte implements UserDetails {
 
 
 	public Compte(@NotNull @Size(min = 8, max = 15) String cin, @NotNull @Size(min = 8, max = 255) String mdp,
-			boolean activated, Etudiant etudiant, Secretaire secretaire, Enseignant enseignant, Set<Role> roles) {
+			boolean activated, Etudiant etudiant, Secretaire secretaire, Professeur professeur, Set<Role> roles) {
 		super();
 		this.cin = cin;
 		this.mdp = mdp;
 		this.activated = activated;
 		this.etudiant = etudiant;
 		this.secretaire = secretaire;
-		this.enseignant = enseignant;
+		this.professeur = professeur;
 		this.roles = roles;
 	}
 
 	public Compte(int id, @NotNull @Size(min = 8, max = 15) String cin, @NotNull @Size(min = 8, max = 255) String mdp,
-			boolean activated, Etudiant etudiant, Secretaire secretaire, Enseignant enseignant, Set<Role> roles) {
+			boolean activated, Etudiant etudiant, Secretaire secretaire, Professeur professeur, Set<Role> roles) {
 		super();
 		this.id = id;
 		this.cin = cin;
@@ -103,7 +103,7 @@ public class Compte implements UserDetails {
 		this.activated = activated;
 		this.etudiant = etudiant;
 		this.secretaire = secretaire;
-		this.enseignant = enseignant;
+		this.professeur = professeur;
 		this.roles = roles;
 	}
 
@@ -224,16 +224,18 @@ public class Compte implements UserDetails {
 	}
 
 
+	public Professeur getProfesseur() {
+		return professeur;
+	}
 
-	public Enseignant getEnseignant() {
-		return enseignant;
+
+	public void setProfesseur(Professeur professeur) {
+		this.professeur = professeur;
 	}
 
 
 
-	public void setEnseignant(Enseignant enseignant) {
-		this.enseignant = enseignant;
-	}
+	
 
 	
 	

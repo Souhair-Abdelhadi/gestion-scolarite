@@ -28,12 +28,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@Table(name = "enseignants",
+@Table(name = "professeurs",
 uniqueConstraints = {
 		@UniqueConstraint(columnNames = "cin")
 }
 )
-public class Enseignant {
+public class Professeur {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,11 +57,11 @@ public class Enseignant {
 	
 	@NotNull
 	@Column(nullable = false)
-	private Date date_nais;
+	private String type;
 	
 	@NotNull
 	@Column(nullable = false)
-	private Date date_emb;
+	private Date date_nais;
 	
 	@NotNull
 	@Email
@@ -73,82 +73,66 @@ public class Enseignant {
 	@Column(nullable = false,length = 14)
 	private String tel;
 	
-	@OneToOne(mappedBy = "enseignant")
+	@OneToOne(mappedBy = "professeur")
 //	@JsonManagedReference
 	@JsonIgnore
 	private Compte compte;
 	
 	
-	@OneToMany(mappedBy = "enseignant")
+	@OneToMany(mappedBy = "professeur")
 	@JsonManagedReference
 	private Set<Affectations> affectations = new HashSet<Affectations>();
 	
 	
-	public Enseignant() {
+	public Professeur() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Enseignant(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
-			@NotNull @Size(min = 8, max = 15) String cin,
-			@NotNull Date date_nais, @NotNull Date date_emb, @NotNull @Email String email,
-			@NotNull @Email @Size(min = 10, max = 14) String tel) {
+	public Professeur(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
+			@NotNull @Size(min = 8, max = 15) String cin, @NotNull String type, @NotNull Date date_nais,
+			@NotNull @Email String email, @NotNull @Size(min = 10, max = 14) String tel, Compte compte,
+			Set<Affectations> affectations) {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
 		this.cin = cin;
+		this.type = type;
 		this.date_nais = date_nais;
-		this.date_emb = date_emb;
-		this.email = email;
-		this.tel = tel;
-	}
-	
-	
-
-	public Enseignant(int id, @NotNull @Size(min = 5, max = 30) String nom,
-				@NotNull @Size(min = 5, max = 30) String prenom, @NotNull @Size(min = 8, max = 15) String cin,
-				@NotNull Date date_nais, @NotNull Date date_emb, @NotNull @Email String email,
-				@NotNull @Size(min = 10, max = 14) String tel) {
-			super();
-			this.id = id;
-			this.nom = nom;
-			this.prenom = prenom;
-			this.cin = cin;
-			this.date_nais = date_nais;
-			this.date_emb = date_emb;
-			this.email = email;
-			this.tel = tel;
-		}
-
-	public Enseignant(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
-			@NotNull @Size(min = 8, max = 15) String cin,
-			@NotNull Date date_nais, @NotNull Date date_emb, @NotNull @Email String email,
-			@NotNull @Email @Size(min = 10, max = 14) String tel, Compte compte) {
-		super();
-		this.nom = nom;
-		this.prenom = prenom;
-		this.cin = cin;
-		this.date_nais = date_nais;
-		this.date_emb = date_emb;
 		this.email = email;
 		this.tel = tel;
 		this.compte = compte;
+		this.affectations = affectations;
 	}
 
-	public Enseignant(int id, @NotNull @Size(min = 5, max = 30) String nom,
+	public Professeur(int id, @NotNull @Size(min = 5, max = 30) String nom,
 			@NotNull @Size(min = 5, max = 30) String prenom, @NotNull @Size(min = 8, max = 15) String cin,
-			@NotNull Date date_nais, @NotNull Date date_emb,
-			@NotNull @Email String email, @NotNull @Email @Size(min = 10, max = 14) String tel, Compte compte) {
+			@NotNull String type, @NotNull Date date_nais, @NotNull @Email String email,
+			@NotNull @Size(min = 10, max = 14) String tel, Compte compte, Set<Affectations> affectations) {
 		super();
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.cin = cin;
+		this.type = type;
 		this.date_nais = date_nais;
-		this.date_emb = date_emb;
 		this.email = email;
 		this.tel = tel;
 		this.compte = compte;
+		this.affectations = affectations;
+	}	
+
+	public Professeur(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
+			@NotNull @Size(min = 8, max = 15) String cin, @NotNull String type, @NotNull Date date_nais,
+			@NotNull @Email String email, @NotNull @Size(min = 10, max = 14) String tel) {
+		super();
+		this.nom = nom;
+		this.prenom = prenom;
+		this.cin = cin;
+		this.type = type;
+		this.date_nais = date_nais;
+		this.email = email;
+		this.tel = tel;
 	}
 
 	public String getNom() {
@@ -183,13 +167,7 @@ public class Enseignant {
 		this.date_nais = date_nais;
 	}
 
-	public Date getDate_emb() {
-		return date_emb;
-	}
 
-	public void setDate_emb(Date date_emb) {
-		this.date_emb = date_emb;
-	}
 
 	public String getEmail() {
 		return email;
@@ -229,6 +207,14 @@ public class Enseignant {
 
 	public void setAffectations(Set<Affectations> affectations) {
 		this.affectations = affectations;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 		

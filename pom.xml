@@ -14,7 +14,7 @@
 	<name>gestion-scolarite</name>
 	<description>Restfull api&apos;s for Gestion De Scolarite</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -55,6 +55,12 @@
 		    <version>0.9.1</version>
 		</dependency>
 		
+		<dependency>
+	        <groupId>org.projectlombok</groupId>
+	        <artifactId>lombok</artifactId>
+	        <version>1.18.20</version>
+	        <scope>provided</scope>
+	    </dependency>
     
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

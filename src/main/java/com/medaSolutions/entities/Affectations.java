@@ -28,10 +28,10 @@ public class Affectations {
 	
 	
 	@ManyToOne
-	@MapsId("enseignantId")
-	@JoinColumn(name = "enseignant_id")
+	@MapsId("professeurId")
+	@JoinColumn(name = "professeur_id")
 	@JsonBackReference
-	private Enseignant enseignant;
+	private Professeur professeur;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -48,10 +48,10 @@ public class Affectations {
 
 	
 
-	public Affectations(AffectationPK id, Enseignant enseignant, Module module, Date date_affectation) {
+	public Affectations(AffectationPK id, Professeur professeur, Module module, Date date_affectation) {
 		super();
 		this.id = id;
-		this.enseignant = enseignant;
+		this.professeur = professeur;
 		this.module = module;
 		this.date_affectation = date_affectation;
 	}
@@ -66,13 +66,19 @@ public class Affectations {
 		this.id = id;
 	}
 
-	public Enseignant getEnseignant() {
-		return enseignant;
+	
+
+	public Professeur getProfesseur() {
+		return professeur;
 	}
 
-	public void setEnseignant(Enseignant enseignant) {
-		this.enseignant = enseignant;
+
+
+	public void setProfesseur(Professeur professeur) {
+		this.professeur = professeur;
 	}
+
+
 
 	public Module getModule() {
 		return module;

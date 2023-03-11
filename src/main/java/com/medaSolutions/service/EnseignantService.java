@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.medaSolutions.entities.Compte;
-import com.medaSolutions.entities.Enseignant;
+import com.medaSolutions.entities.Professeur;
 import com.medaSolutions.entities.Etudiant;
 import com.medaSolutions.entities.Role;
 import com.medaSolutions.entities.pojo.EnseignantPojo;
@@ -46,8 +46,8 @@ public class EnseignantService {
 	private RoleRepository roleRepo;
 	
 	@RolesAllowed("ROLE_SECRETAIRE")
-	@GetMapping(value = "/enseignants")
-	public ResponseEntity<Object> getEnseignants(){
+	@GetMapping(value = "/professeurs")
+	public ResponseEntity<Object> getProfesseurs(){
 		
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(enseignantRepo.findAll());
@@ -61,16 +61,16 @@ public class EnseignantService {
 	}
 	
 	@RolesAllowed(value = {"ROLE_SECRETAIRE"})
-	@RequestMapping(value = "/enseignant/{id}")
-	public ResponseEntity<Object> getEtudiant(@PathVariable int id) {
+	@RequestMapping(value = "/professeur/{id}")
+	public ResponseEntity<Object> getProfesseur(@PathVariable int id) {
 		try {
 			if(id == 0 ) {
 				HashMap<String, Object> errors = new HashMap<>();
 				errors.put("error", true);
-				errors.put("message", "Enseignant id is required ");
+				errors.put("message", "professeur id is required ");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 			}
-			Optional<Enseignant> ens = enseignantRepo.findById(id);
+			Optional<Professeur> ens = enseignantRepo.findById(id);
 			if(ens.isPresent()) {
 				return ResponseEntity.status(HttpStatus.OK).body(ens.get());
 			}
@@ -89,8 +89,8 @@ public class EnseignantService {
 	
 	
 	@RolesAllowed("ROLE_SECRETAIRE")
-	@PostMapping(value = "/addEnseignant")
-	public ResponseEntity<Object> addEnseignant(@RequestBody @Valid EnseignantPojo enseignantPojo,BindingResult bindRes){
+	@PostMapping(value = "/addProfesseur")
+	public ResponseEntity<Object> addProfesseur(@RequestBody @Valid EnseignantPojo enseignantPojo,BindingResult bindRes){
 		
 		try {
 			if(bindRes.hasErrors()) {
@@ -101,19 +101,19 @@ public class EnseignantService {
 				}
 				return ResponseEntity.status(400).body(errors);
 			}
-			Optional<Enseignant> o_ens = enseignantRepo.findByCin(enseignantPojo.getCin());
+			Optional<Professeur> o_ens = enseignantRepo.findByCin(enseignantPojo.getCin());
 			if(o_ens.isPresent()) {
 				HashMap<String, Object> errors = new HashMap<>();
 				errors.put("error", true);
-				errors.put("message","A Enseignant already exist with the same cin" );
+				errors.put("message","A Professeur already exist with the same cin" );
 				return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
 			}
-			Enseignant ens = new Enseignant(enseignantPojo.getNom(), enseignantPojo.getPrenom(),enseignantPojo.getCin(),
-					enseignantPojo.getDate_nais(), enseignantPojo.getDate_emb(), enseignantPojo.getEmail(),enseignantPojo.getTel());
-				Enseignant res = enseignantRepo.save(ens);
+			Professeur ens = new Professeur(enseignantPojo.getNom(),enseignantPojo.getPrenom(),enseignantPojo.getCin(),enseignantPojo.getType(),
+					enseignantPojo.getDate_nais(),enseignantPojo.getEmail(),enseignantPojo.getTel());
+				Professeur res = enseignantRepo.save(ens);
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 			Compte compte = new Compte(enseignantPojo.getCin(),bc.encode(enseignantPojo.getMdp()),true,null,null,ens,new HashSet<Role>());
-			compte.addRole(roleRepo.findByName("ROLE_ENSEIGNANT").get());
+			compte.addRole(roleRepo.findByName("ROLE_PROFESSEUR").get());
 			compteRepo.save(compte);
 			return ResponseEntity.status(HttpStatus.OK).body(res) ;
 		} catch (Exception e) {
@@ -127,8 +127,8 @@ public class EnseignantService {
 	}
 	
 	@RolesAllowed("ROLE_SECRETAIRE")
-	@PutMapping(value = "/updateEnseignant/{id}")
-	public ResponseEntity<Object> updateEnseignant(@PathVariable int id,@RequestBody @Valid Enseignant enseignant,BindingResult bindRes){
+	@PutMapping(value = "/updateProfesseur/{id}")
+	public ResponseEntity<Object> updateEnseignant(@PathVariable int id,@RequestBody @Valid Professeur enseignant,BindingResult bindRes){
 		
 		try {
 			if(bindRes.hasErrors()) {
@@ -139,7 +139,7 @@ public class EnseignantService {
 				}
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 			}
-			Optional<Enseignant> ens = enseignantRepo.findById(id);
+			Optional<Professeur> ens = enseignantRepo.findById(id);
 			if(ens.isPresent()) {
 				enseignant.setId(id);
 				return ResponseEntity.status(HttpStatus.OK).body(enseignantRepo.save(enseignant));
@@ -162,19 +162,19 @@ public class EnseignantService {
 	}
 	
 	@RolesAllowed(value = {"ROLE_SECRETAIRE"})
-	@DeleteMapping(value = "/deleteEnseignant/{id}")
+	@DeleteMapping(value = "/deleteProfesseur/{id}")
 	public ResponseEntity<Object> deleteEnseignant(@PathVariable int id){
 		
 		try {
-			Optional<Enseignant> ens = enseignantRepo.findById(id);
+			Optional<Professeur> ens = enseignantRepo.findById(id);
 			HashMap<String, Object> res = new HashMap<>();
 			if(ens.isPresent()) {
 				
 				enseignantRepo.deleteEnseignantById(id);
-				return ResponseEntity.status(HttpStatus.OK).body(res.put("message"," Enseignant with the id : "+ id+" deleted"));
+				return ResponseEntity.status(HttpStatus.OK).body(res.put("message"," Professeur with the id : "+ id+" deleted"));
 			}
 			res.put("error", true);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res.put("message","No Enseignant was found with the id "+id));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res.put("message","No Professeur was found with the id "+id));
 		} catch (Exception e) {
 			// TODO: handle exception
 			HashMap<String, Object> errors = new HashMap<>();

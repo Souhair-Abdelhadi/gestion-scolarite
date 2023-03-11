@@ -6,6 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
 public class EnseignantPojo {
 
 	
@@ -20,70 +21,63 @@ public class EnseignantPojo {
 	private String prenom;
 	
 	@NotNull
-	@Size(min = 8,max = 15)
-	private String cin;
-	
-	@NotNull
 	@Size(min = 8,max = 16)
 	private String mdp;
 	
 	@NotNull
-	private Date date_nais;
+	@Size(min = 8,max = 15)
+	private String cin;
 	
 	@NotNull
-	private Date date_emb;
+	private String type;
+	
+	@NotNull
+	private Date date_nais;
 	
 	@NotNull
 	@Email
 	private String email;
 	
 	@NotNull
-	@Size(min = 10,max = 14)
+	@Size(min = 10,max = 10)
 	private String tel;
+	
+	
+
+	public EnseignantPojo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public EnseignantPojo(int id, @NotNull @Size(min = 5, max = 30) String nom,
 			@NotNull @Size(min = 5, max = 30) String prenom, @NotNull @Size(min = 8, max = 15) String cin,
-			@NotNull @Size(min = 8, max = 16) String mdp,
-			@NotNull Date date_nais, @NotNull Date date_emb, @NotNull @Email String email,
-			@NotNull @Size(min = 10, max = 14) String tel) {
+			@NotNull String type, @NotNull Date date_nais, @NotNull @Email String email,
+			@NotNull @Size(min = 10, max = 10) String tel) {
 		super();
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.cin = cin;
-		this.mdp = mdp;
+		this.type = type;
 		this.date_nais = date_nais;
-		this.date_emb = date_emb;
 		this.email = email;
 		this.tel = tel;
 	}
 
 	public EnseignantPojo(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
-			@NotNull @Size(min = 8, max = 15) String cin, String mdp, @NotNull Date date_nais, @NotNull Date date_emb,
-			@NotNull @Email String email, @NotNull @Size(min = 10, max = 14) String tel) {
+			@NotNull @Size(min = 8, max = 15) String cin, @NotNull String type, @NotNull Date date_nais,
+			@NotNull @Email String email, @NotNull @Size(min = 10, max = 10) String tel ,@NotNull @Size(min = 8,max = 16) String mdp) {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
 		this.cin = cin;
-		this.mdp = mdp;
+		this.type = type;
 		this.date_nais = date_nais;
-		this.date_emb = date_emb;
 		this.email = email;
 		this.tel = tel;
+		this.mdp = mdp;
 	}
 
-	public EnseignantPojo(@NotNull @Size(min = 5, max = 30) String nom, @NotNull @Size(min = 5, max = 30) String prenom,
-			@NotNull @Size(min = 8, max = 15) String cin, @NotNull Date date_nais, @NotNull Date date_emb,
-			@NotNull @Email String email, @NotNull @Size(min = 10, max = 14) String tel) {
-		super();
-		this.nom = nom;
-		this.prenom = prenom;
-		this.cin = cin;
-		this.date_nais = date_nais;
-		this.date_emb = date_emb;
-		this.email = email;
-		this.tel = tel;
-	}
 	
 	
 	public int getId() {
@@ -118,12 +112,12 @@ public class EnseignantPojo {
 		this.cin = cin;
 	}
 
-	public String getMdp() {
-		return mdp;
+	public String getType() {
+		return type;
 	}
 
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getDate_nais() {
@@ -132,14 +126,6 @@ public class EnseignantPojo {
 
 	public void setDate_nais(Date date_nais) {
 		this.date_nais = date_nais;
-	}
-
-	public Date getDate_emb() {
-		return date_emb;
-	}
-
-	public void setDate_emb(Date date_emb) {
-		this.date_emb = date_emb;
 	}
 
 	public String getEmail() {
@@ -158,10 +144,16 @@ public class EnseignantPojo {
 		this.tel = tel;
 	}
 
-	
-	
+	public String getMdp() {
+		return mdp;
+	}
 
+	public void setMdp(String mdp) {
+		this.mdp = mdp;
+	}
 	
 	
 	
 }
+
+	

@@ -30,6 +30,7 @@ import com.medaSolutions.entities.Role;
 import com.medaSolutions.entities.pojo.EtudiantPojo;
 import com.medaSolutions.repository.CompteRepository;
 import com.medaSolutions.repository.EtudiantRepository;
+import com.medaSolutions.repository.FiliereRepo;
 import com.medaSolutions.repository.RoleRepository;
 
 @RestController
@@ -41,6 +42,9 @@ public class EtudiantService {
 	
 	@Autowired
 	private CompteRepository compteRepo;
+	
+	@Autowired
+	private FiliereRepo filiereRepo;
 	
 	@Autowired
 	private RoleRepository roleRepo;
@@ -107,14 +111,17 @@ public class EtudiantService {
 				errors.put("message", "Can't add student because already a Compte exist with the same cin ");
 				return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
 			}
-			Etudiant etudiant = new Etudiant(etudiantPojo.getNom(),etudiantPojo.getPrenom() , etudiantPojo.getCin());
+			System.out.println("filiere name : "+filiereRepo.findById(etudiantPojo.getFiliereId()).get().getNom());
+			Etudiant etudiant = new Etudiant(etudiantPojo.getNom(),etudiantPojo.getPrenom(),etudiantPojo.getNiveau() , etudiantPojo.getCin(),
+				etudiantPojo.getCne(), etudiantPojo.getImmatriculation(), etudiantPojo.getTel(), etudiantPojo.getEmail(),
+				etudiantPojo.getDateNaissance(),filiereRepo.findById(etudiantPojo.getFiliereId()).get());
 			etudiant = etudiantRepository.save(etudiant);
 			Set<Role> role = new HashSet<>();
 			role.add(roleRepo.findByName("Role_ETUDIANT").get());
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 			compteRepo.save(new Compte(etudiantPojo.getCin(),bc.encode(etudiantPojo.getMdp()) , true, etudiant, null, null, role));
 			//etudiant.setCompte(cmpt);
-			return ResponseEntity.status(HttpStatus.OK).body(etudiantRepository.findById(etudiant.getId()));
+			return ResponseEntity.status(HttpStatus.OK).body(etudiant);
 		} catch (Exception e) {
 			// TODO: handle exception
 			HashMap<String, Object> errors = new HashMap<>();
@@ -127,7 +134,7 @@ public class EtudiantService {
 	
 	@RolesAllowed(value = {"ROLE_SECRETAIRE"})
 	@PutMapping(value = "/updateEtudiant")
-	public ResponseEntity<Object> updateEtudiant(@RequestBody @Valid Etudiant etudiant,BindingResult bindRes){
+	public ResponseEntity<Object> updateEtudiant(@RequestBody @Valid EtudiantPojo etudiantPojo ,BindingResult bindRes){
 		
 		//need to check if the Etudiant exist or not if not don't admit the changes
 		try {
@@ -139,14 +146,19 @@ public class EtudiantService {
 				}
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
 			}
-			Optional<Etudiant> etud = etudiantRepository.findById(etudiant.getId());
+			Optional<Etudiant> etud = etudiantRepository.findById(etudiantPojo.getId());
 			if(etud.isPresent()) {
-				return ResponseEntity.status(HttpStatus.OK).body(etudiantRepository.save(etudiant));
+				HashMap<String, Object> mp = new HashMap<>();
+				Etudiant etudiant1 = new Etudiant(etudiantPojo.getId(),etudiantPojo.getNom(),etudiantPojo.getPrenom(),etudiantPojo.getNiveau() , etudiantPojo.getCin(),
+						etudiantPojo.getCne(), etudiantPojo.getImmatriculation(), etudiantPojo.getTel(), etudiantPojo.getEmail(),
+						etudiantPojo.getDateNaissance(),filiereRepo.findById(etudiantPojo.getFiliereId()).get());
+				Etudiant et = etudiantRepository.save(etudiant1);
+				return ResponseEntity.status(HttpStatus.OK).body(et);
 			}
 			else {
 				HashMap<String, Object> errors = new HashMap<>();
 				errors.put("error", true);
-				errors.put("message", "No Eudiant found with the id "+etudiant.getId());
+				errors.put("message", "No Eudiant found with the id "+etudiantPojo.getId());
 				return ResponseEntity.status(HttpStatus.OK).body(errors);
 			}
 			
@@ -155,6 +167,7 @@ public class EtudiantService {
 			HashMap<String, Object> errors = new HashMap<>();
 			errors.put("error", true);
 			errors.put("message", e.getMessage());
+			errors.put("id", etudiantPojo.getId());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errors);
 		}
 		

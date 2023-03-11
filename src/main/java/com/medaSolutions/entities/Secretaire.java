@@ -41,7 +41,6 @@ public class Secretaire {
 	private String cin;
 	
 	@NotNull
-	@Size(min = 8,max = 16)
 	private String mdp;
 	
 	

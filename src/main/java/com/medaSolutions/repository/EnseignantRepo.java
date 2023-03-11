@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.medaSolutions.entities.Enseignant;
+import com.medaSolutions.entities.Professeur;
 
-public interface EnseignantRepo extends JpaRepository<Enseignant, Integer> {
+public interface EnseignantRepo extends JpaRepository<Professeur, Integer> {
 	
-	Optional<Enseignant> findByCin(String cin);
+	Optional<Professeur> findByCin(String cin);
 
 	@Transactional
 	@Modifying

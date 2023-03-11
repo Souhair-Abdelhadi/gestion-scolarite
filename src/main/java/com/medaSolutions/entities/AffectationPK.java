@@ -13,7 +13,7 @@ public class AffectationPK implements Serializable {
 
 	private int id;
 	
-	private int enseignantId;
+	private int professeurId;
 	
 	private int moduleId;
 
@@ -22,18 +22,18 @@ public class AffectationPK implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public AffectationPK(int enseignantId, int moduleId) {
+	public AffectationPK(int professeurId, int moduleId) {
 		super();
-		this.enseignantId = enseignantId;
+		this.professeurId = professeurId;
 		this.moduleId = moduleId;
 	}
 	
 	
 
-	public AffectationPK(int id, int enseignantId, int moduleId) {
+	public AffectationPK(int id, int professeurId, int moduleId) {
 		super();
 		this.id = id;
-		this.enseignantId = enseignantId;
+		this.professeurId = professeurId;
 		this.moduleId = moduleId;
 	}
 
@@ -45,12 +45,14 @@ public class AffectationPK implements Serializable {
 		this.id = id;
 	}
 
-	public int getEnseignantId() {
-		return enseignantId;
+	
+
+	public int getProfesseurId() {
+		return professeurId;
 	}
 
-	public void setEnseignantId(int enseignantId) {
-		this.enseignantId = enseignantId;
+	public void setProfesseurId(int professeurId) {
+		this.professeurId = professeurId;
 	}
 
 	public int getModuleId() {
@@ -63,7 +65,7 @@ public class AffectationPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(enseignantId, moduleId);
+		return Objects.hash(professeurId, moduleId);
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class AffectationPK implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		AffectationPK other = (AffectationPK) obj;
-		return enseignantId == other.enseignantId && moduleId == other.moduleId;
+		return professeurId == other.professeurId && moduleId == other.moduleId;
 	}
 	
 	

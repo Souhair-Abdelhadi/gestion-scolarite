@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -48,16 +49,18 @@ public class Module {
 	@JsonIgnore
 	@OneToMany(mappedBy = "module",fetch = FetchType.LAZY)
 	public Set<Affectations> affectations = new HashSet<Affectations>();
-	
-	
-	@JsonIgnore
-	@OneToMany(mappedBy = "module",fetch = FetchType.LAZY)
-	public Set<Absence> absences = new HashSet<Absence>();
-	
+		
 	@JsonIgnore
 	@OneToMany(mappedBy = "module",fetch = FetchType.LAZY)
 	public Set<Notes> notes = new HashSet<Notes>();
 
+	@JsonIgnore
+	@ManyToMany(mappedBy = "modules",fetch = FetchType.LAZY)
+	public Set<Filiere> filieres = new HashSet<Filiere>();
+	
+	
+	
+	
 	public Module() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -119,6 +122,14 @@ public class Module {
 
 	public void setAffectations(Set<Affectations> affectations) {
 		this.affectations = affectations;
+	}
+	
+	public Set<Filiere> getFilieres() {
+		return filieres;
+	}
+
+	public void setFilieres(Set<Filiere> filieres) {
+		this.filieres = filieres;
 	}
 
 	@Override
